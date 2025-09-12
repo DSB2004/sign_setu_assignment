@@ -1,3 +1,4 @@
+"use server";
 import AuthModel from "@/models/auth.model";
 import { getDB } from "@/lib/db";
 import { createJWT } from "@/util/jwt.util";
@@ -28,7 +29,7 @@ export const forgetPassword = async (data: ForgetPasswordDTO) => {
 
     const token = await createJWT({
       payload: { email: user.email, action: TokenType.PASSWORD },
-      expireIn: 5 * 60,
+      expireIn: "5m",
     });
 
     const url = clientURL + "/auth/password/reset?auth_token=" + token;
@@ -39,14 +40,13 @@ export const forgetPassword = async (data: ForgetPasswordDTO) => {
       subject: "Password Change Request",
     });
     return {
-      status: true,
-      message:
-        "Verification email has been sent to your authorized email. Please note this session only active for next 5 minute",
+      success: true,
+      message: "Verification email has been sent",
     };
   } catch (err) {
     console.error(`[FORGET PASSWORD] Error happened ${err}`);
     return {
-      status: false,
+      success: false,
       message: "Internal Server Error",
     };
   }

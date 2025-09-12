@@ -1,3 +1,4 @@
+"use server";
 import AuthModel from "@/models/auth.model";
 import { getDB } from "@/lib/db";
 import { createJWT } from "@/util/jwt.util";
@@ -19,7 +20,7 @@ export const retry = async (data: RetryDTO) => {
     });
 
     if (!user) {
-      console.warn(`[SIGNIN] User ${email} not found`);
+      console.warn(`[RETRY] User ${email} not found`);
       return {
         success: false,
         message: `Failed! No Account found with email ${email}`,

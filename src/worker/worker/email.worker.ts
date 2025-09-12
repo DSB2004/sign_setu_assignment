@@ -9,7 +9,13 @@ export const EmailWorker = () => {
     QUEUE_ENUM.EMAIL_QUEUE,
     async (job) => {
       console.log("[EMAIL WORKER] ", job.name, job.data);
-      await repo.SendMail(job.data);
+      if (job.name === "send.email") {
+        console.log("[EMAIL WORKER] Sending mail:", job.data);
+        await repo.SendMail(job.data);
+      } else if (job.name === "reminder.email") {
+        console.log("Reminder mail called");
+        await repo.RemainderMail();
+      }
     },
     {
       connection: redis,

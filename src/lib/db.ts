@@ -1,5 +1,6 @@
-import mongoose, { Mongoose } from "mongoose";
+"use server";
 
+import mongoose, { Mongoose } from "mongoose";
 const MONGODB_URI = process.env.MONGODB_URL || "";
 if (!MONGODB_URI) throw new Error("MONGODB_URL not set in environment");
 

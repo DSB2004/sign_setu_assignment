@@ -1,3 +1,4 @@
+"use server";
 import AuthModel from "@/models/auth.model";
 import { getDB } from "@/lib/db";
 import { createJWT, verifyJWT } from "@/util/jwt.util";
@@ -16,6 +17,7 @@ export const verification = async (data: VerificationDTO) => {
     const res = await verifyJWT<{ email: string; action: TokenType }>(token);
 
     if (res == null) {
+      console.log("failed to verify");
       return {
         status: false,
         message: "Failed! Unable to change password, Session Expired",
@@ -42,6 +44,7 @@ export const verification = async (data: VerificationDTO) => {
       };
     }
     user.verified = true;
+    await user.save();
     const _accessToken = await createJWT({
       payload: {
         authId: user._id.toString(),

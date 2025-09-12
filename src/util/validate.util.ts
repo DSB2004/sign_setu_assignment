@@ -1,3 +1,4 @@
+"use server";
 import { createJWT, verifyJWT } from "@/util/jwt.util";
 import { DecodedToken, TokenType } from "@/types/auth";
 import { cookies } from "next/headers";
@@ -19,7 +20,7 @@ const _generate = async (refreshToken: string, path: string) => {
       email,
       action: TokenType.ACCESS,
     },
-    expireIn: 15 * 60,
+    expireIn: "15m",
   });
 
   const _refreshToken = await createJWT({
@@ -39,9 +40,7 @@ const _generate = async (refreshToken: string, path: string) => {
   return { email, authId };
 };
 
-export const validate = async (
-  data: ValidateDTO
-): Promise<DecodedToken> => {
+export const validate = async (data: ValidateDTO): Promise<DecodedToken> => {
   const accessToken = (await cookies()).get("access-token")?.value;
   const refreshToken = (await cookies()).get("refresh-token")?.value;
 

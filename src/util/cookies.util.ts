@@ -14,7 +14,7 @@ export const setCookies = async ({
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     path: "/",
-    maxAge: 15 * 60, 
+    maxAge: 15 * 60,
     priority: "high",
   });
 
@@ -23,7 +23,7 @@ export const setCookies = async ({
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     path: "/",
-    maxAge: 7 * 24 * 60 * 60, 
+    maxAge: 7 * 24 * 60 * 60,
     priority: "high",
   });
 };

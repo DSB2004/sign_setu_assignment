@@ -7,3 +7,5 @@ export const sendMail = async (data: SendMailDTO) => {
   await queue.add("send.email", data);
   return true;
 };
+
+

@@ -1,4 +1,4 @@
-import { prop, getModelForClass } from "@typegoose/typegoose";
+import { prop, getModelForClass, mongoose } from "@typegoose/typegoose";
 
 class User {
   @prop({ required: true, unique: true })
@@ -17,19 +17,21 @@ class User {
   public bio?: string;
 }
 
-const UserModel = getModelForClass(User, {
-  schemaOptions: {
-    collection: "user",
-    timestamps: true,
-    toJSON: {
-      virtuals: true,
-      versionKey: false,
-      transform: (_, ret) => {
-        ret.id = ret._id.toString();
-        delete ret._id;
+const UserModel =
+  (mongoose.models.User as ReturnType<typeof getModelForClass<typeof User>>) ||
+  getModelForClass(User, {
+    schemaOptions: {
+      collection: "user",
+      timestamps: true,
+      toJSON: {
+        virtuals: true,
+        versionKey: false,
+        transform: (_, ret) => {
+          ret.id = ret._id.toString();
+          delete ret._id;
+        },
       },
     },
-  },
-});
+  });
 
 export default UserModel;

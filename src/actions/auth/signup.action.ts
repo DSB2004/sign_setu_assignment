@@ -1,8 +1,10 @@
+"use server";
 import AuthModel from "@/models/auth.model";
 import { getDB } from "@/lib/db";
 import { createJWT } from "@/util/jwt.util";
 import { TokenType } from "@/types/auth";
 import { sendMail } from "@/worker/service/email.service";
+import { hashPassword } from "@/util/hash.util";
 interface SignUpDTO {
   email: string;
   password: string;
@@ -26,15 +28,15 @@ export const signUp = async (data: SignUpDTO) => {
         message: `Failed! Account found with email ${email}`,
       };
     }
-
+    const hashPass = await hashPassword(password);
     await AuthModel.create({
       email,
-      password,
+      password: hashPass,
     });
 
     const token = await createJWT({
       payload: { email: email, action: TokenType.VERIFICATION },
-      expireIn: 5 * 60,
+      expireIn: "5m",
     });
 
     const url = clientURL + "/auth/verify?auth_token=" + token;

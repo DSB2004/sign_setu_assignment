@@ -1,5 +1,5 @@
 import { prop, getModelForClass } from "@typegoose/typegoose";
-
+import mongoose from "mongoose";
 class Auth {
   @prop({ required: true, unique: true })
   public email!: string;
@@ -11,11 +11,12 @@ class Auth {
   public verified!: boolean;
 }
 
-const AuthModel = getModelForClass(Auth, {
-  schemaOptions: {
-    collection: "auth",
-    timestamps: true,
-  },
-});
-
+const AuthModel =
+  mongoose.models.Auth ||
+  getModelForClass(Auth, {
+    schemaOptions: {
+      collection: "auth",
+      timestamps: true,
+    },
+  });
 export default AuthModel;

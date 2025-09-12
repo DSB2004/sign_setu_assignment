@@ -1,3 +1,4 @@
+"use server";
 import AuthModel from "@/models/auth.model";
 import { getDB } from "@/lib/db";
 import { createJWT } from "@/util/jwt.util";
@@ -44,7 +45,7 @@ export const signIn = async (data: SignInDTO) => {
       console.warn(`[SIGNIN] Verification required ${email}`);
       const token = await createJWT({
         payload: { email: user.email, action: TokenType.VERIFICATION },
-        expireIn: 5 * 60,
+        expireIn: "5m",
       });
 
       const url = clientURL + "/auth/verify?auth_token=" + token;
@@ -54,7 +55,9 @@ export const signIn = async (data: SignInDTO) => {
         email: user.email,
         subject: "Account Verification",
       });
+
       return {
+        redirect: true,
         success: false,
         message: `Failed! Verification pending for ${email}`,
       };
@@ -81,14 +84,15 @@ export const signIn = async (data: SignInDTO) => {
       _accessToken,
       _refreshToken,
     });
+
     return {
-      status: true,
+      success: true,
       message: "Login successful",
     };
   } catch (err) {
     console.error(`[SIGNIN] Error happened ${err}`);
     return {
-      status: false,
+      success: false,
       message: "Internal Server Error",
     };
   }

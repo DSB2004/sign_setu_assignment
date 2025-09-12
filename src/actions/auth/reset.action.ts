@@ -1,3 +1,4 @@
+"use server";
 import AuthModel from "@/models/auth.model";
 import { getDB } from "@/lib/db";
 import { verifyJWT } from "@/util/jwt.util";
@@ -18,15 +19,15 @@ export const resetPassword = async (data: ResetPasswordDTO) => {
 
     if (res == null) {
       return {
-        status: false,
+        success: false,
         message: "Failed! Unable to change password, Session Expired",
       };
     }
     const { email, action } = res;
 
-    if (action !== TokenType.VERIFICATION) {
+    if (action !== TokenType.PASSWORD) {
       return {
-        status: false,
+        success: false,
         message: "Failed! Wrong verification token provided",
       };
     }
@@ -48,13 +49,13 @@ export const resetPassword = async (data: ResetPasswordDTO) => {
     await user.save();
 
     return {
-      status: true,
+      success: true,
       message: "Password has been changed successfully",
     };
   } catch (err) {
     console.error(`[RES PASSWORD] Error happened ${err}`);
     return {
-      status: false,
+      success: false,
       message: "Internal Server Error",
     };
   }
